@@ -104,6 +104,18 @@ GTAGS
 ID
 
 *.orig
+*.rej
+*.patch
+susfs4ksu/
+setup.sh
+setup_log.txt
+build.sh
+apatch.config
+cert.config
+ksu.config
+securities.config
+out/
+
 *~
 \#*#
 

@@ -100,6 +100,7 @@ static void inotify_fdinfo(struct seq_file *m, struct fsnotify_mark *mark)
 
 	inode_mark = container_of(mark, struct inotify_inode_mark, fsn_mark);
 	inode = igrab(mark->connector->inode);
+	u32 mask = mark->mask & IN_ALL_EVENTS;
 	if (inode) {
 #ifdef CONFIG_KSU_SUSFS_SUS_MOUNT
 		if (likely(current->susfs_task_state & TASK_STRUCT_NON_ROOT_USER_APP_PROC) &&
@@ -119,7 +120,7 @@ static void inotify_fdinfo(struct seq_file *m, struct fsnotify_mark *mark)
 			}
 			seq_printf(m, "inotify wd:%x ino:%lx sdev:%x mask:%x ignored_mask:0 ",
 			   inode_mark->wd, path.dentry->d_inode->i_ino, path.dentry->d_inode->i_sb->s_dev,
-			   inotify_mark_user_mask(mark));
+			   mask);
 			show_mark_fhandle(m, path.dentry->d_inode);
 			seq_putc(m, '\n');
 			iput(inode);
@@ -137,7 +138,6 @@ out_seq_printf:
 		 * least one bit (FS_EVENT_ON_CHILD) which is
 		 * used only internally to the kernel.
 		 */
-		u32 mask = mark->mask & IN_ALL_EVENTS;
 		seq_printf(m, "inotify wd:%x ino:%lx sdev:%x mask:%x ignored_mask:%x ",
 			   inode_mark->wd, inode->i_ino, inode->i_sb->s_dev,
 			   mask, mark->ignored_mask);
